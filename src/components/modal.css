@@ -1,0 +1,41 @@
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.modal-body{
+    padding: 10px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    
+}
+
+.modal-content{
+    width: 500px;
+    background-color: #fff;
+    text-align: center;
+    outline-style: outset;
+    outline-color: black;
+    outline-width: 3px;
+}
+
+.modal-footer{
+    margin: auto;
+    padding: 3px;
+}
+
+/* .button-help{
+    padding: 3px;
+}
+
+.button-close{
+    padding: 3px;
+} */
