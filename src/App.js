@@ -3,7 +3,6 @@ import "./App.css";
 import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
 import React, { useState } from 'react'
-import * as constants from "./components/constants.js";
 
 
 

@@ -1,4 +1,3 @@
-import * as constants from "./constants.js"
 import React, { useState, useRef, useEffect }from "react";
 
 const coffeestops = e => {
