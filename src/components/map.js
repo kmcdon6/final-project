@@ -7,6 +7,10 @@ import {
 } from "@react-google-maps/api";
 import React, { useState, useRef } from 'react'
 import "./maps.css"
+import CoffeeDistance from "./coffeestops";
+import CoffeeSlider from "./coffeeslider.js";
+import value from "./coffeeslider.js";
+import rangeValue from './slidervalue.js'
 
 
 
@@ -19,6 +23,7 @@ const mapContainerStyle = {
     resetBoundsOnResize: "true",
 }
 
+
 export default function Gmap () {
     
                 const [map, setMap] = useState(null);
@@ -26,7 +31,8 @@ export default function Gmap () {
                   useState(null);
                 const [distance, setDistance] = useState("");
                 const [duration, setDuration] = useState("");
-
+                
+                
                 const originRef = useRef();
                 const destinationRef = useRef();
     const { isLoaded, loaderror } = useLoadScript({
@@ -37,12 +43,33 @@ export default function Gmap () {
     if(!isLoaded) return "Finding your coffee";
 
 
-
-
+    const distCoffee = (distance.slice(0,-2))
+    const intCoffee = Number(distCoffee)
+    const numCoffee = (value)
+    const valCoffee = Number(numCoffee)
+    console.log(typeof(intCoffee))
+    console.log(intCoffee)
+    console.log(distCoffee)
+    console.log(rangeValue);
+    console.log(typeof(CoffeeSlider))
+    console.log(valCoffee);
+    console.log(numCoffee)
+/*     const coffeeDistance = { intCoffee } / ({ value } + 1); */
+/*         async function coffeeStops() {
+          await calculatePath;
+          if (distance > 0) {
+            return coffeeDistance;
+            console.log({distance});
+            console.log(coffeeDistance);
+            
+          }
+        } */
     async function calculatePath(){
+       
         if (originRef.current.value === '' || destinationRef.current.value === ''){
             return
         }
+        
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
         const results = await directionsService.route({
@@ -50,11 +77,18 @@ export default function Gmap () {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
+        
         });
+            
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
+        /* console.log(coffeeDistance) */
+        console.log(typeof(distance))
+        
+
     }
+
 
 
 return (
@@ -69,12 +103,16 @@ return (
         <input type="text" placeholder="Destination" ref={destinationRef} />
       </Autocomplete>
     </div>
+    
     <div>
         <button type='submit' onClick={calculatePath}>Find your Buzzed Path</button>
     </div>
     <div>
         <p>Distance: {distance}</p>
+        
         <p>Duration: {duration}</p>
+        <p>{}</p>
+        
     </div>
     <div className="coffeemap">
       <GoogleMap

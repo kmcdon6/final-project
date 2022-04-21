@@ -4,7 +4,8 @@ import Modal from "./modal.js";
 
 
 const CoffeeSlider = (props) => {
-    const {
+ 
+  const {
         step,
         min,
         max,
@@ -13,17 +14,20 @@ const CoffeeSlider = (props) => {
         onChangeValue,
         openModal,
     } = props;
-
-    const rangeRef = useRef();
+    console.log(value)
+    
+    const rangeRef = useRef(onChangeValue);
     const [range, setRange] = useState(defaultValue);
     const handleChange = max => e =>{
         onChangeValue(e)
         setRange(e.target.value);
+        console.log(setRange)
+/*         this.setState({sliderValue})
+ */    }
+
     
 
-    }
-
-
+  
        /* when slider value > 20 when stops - talk to DOM - open modal */
 
     return (
@@ -46,4 +50,5 @@ const CoffeeSlider = (props) => {
       </>
     );
 }
+
 export default CoffeeSlider;
