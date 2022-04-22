@@ -7,10 +7,8 @@ import {
 } from "@react-google-maps/api";
 import React, { useState, useRef } from 'react'
 import "./maps.css"
-import CoffeeDistance from "./coffeestops";
-import CoffeeSlider from "./coffeeslider.js";
-import value from "./coffeeslider.js";
-import rangeValue from './slidervalue.js'
+
+ 
 
 
 
@@ -24,7 +22,7 @@ const mapContainerStyle = {
 }
 
 
-export default function Gmap () {
+export default function Gmap ({rangeValue}) {
     
                 const [map, setMap] = useState(null);
                 const [directionsResponse, setDirectionsResponse] =
@@ -45,25 +43,21 @@ export default function Gmap () {
 
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
-    const numCoffee = (value)
-    const valCoffee = Number(numCoffee)
-    console.log(typeof(intCoffee))
-    console.log(intCoffee)
-    console.log(distCoffee)
-    console.log(rangeValue);
-    console.log(typeof(CoffeeSlider))
-    console.log(valCoffee);
-    console.log(numCoffee)
-/*     const coffeeDistance = { intCoffee } / ({ value } + 1); */
-/*         async function coffeeStops() {
-          await calculatePath;
+       console.log(rangeValue)     
+
+   
+   
+ /* async function coffeeStops({rangeValue}) { */
+           const coffeeDistance = intCoffee /(rangeValue); 
+
+        /*   await calculatePath;
           if (distance > 0) {
+            console.log(coffeeDistance)
             return coffeeDistance;
-            console.log({distance});
-            console.log(coffeeDistance);
+            console.log({distance}); */
             
-          }
-        } */
+            
+          
     async function calculatePath(){
        
         if (originRef.current.value === '' || destinationRef.current.value === ''){
@@ -83,8 +77,9 @@ export default function Gmap () {
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
+        
         /* console.log(coffeeDistance) */
-        console.log(typeof(distance))
+        
         
 
     }
@@ -111,8 +106,9 @@ return (
         <p>Distance: {distance}</p>
         
         <p>Duration: {duration}</p>
-        <p>{}</p>
-        
+        <p>Miles per Coffee: {coffeeDistance}</p>
+{/*         <p>Miles per Coffee: {intCoffee/rangeValue}</p>
+ */}        
     </div>
     <div className="coffeemap">
       <GoogleMap

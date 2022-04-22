@@ -3,12 +3,12 @@ import "./App.css";
 import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
 import React, { useState } from 'react'
-import onChangeSlider from "./components/slidervalue.js";
+/* import onChangeSlider from "./components/slidervalue.js";
 import rangeValue from "./components/slidervalue.js";
 import setShow from "./components/slidervalue.js";
-import show from "./components/slidervalue.js";
-import OnChangeSlider from "./components/slidervalue.js"
-
+import show from "./components/slidervalue.js"; */
+/* import onChangeSlider from "./components/slidervalue.js"
+ */
 /* import ModalPopUp from './components/modalpopup.js' */
 
 
@@ -25,7 +25,7 @@ const mapContainerStyle = {
 function App() {
 
 
-/*   const onChangeSlider = (e) => {
+  const onChangeSlider = (e) => {
     console.log(rangeValue);
     setRangeValue(parseInt(e.target.value, 10));
     if (rangeValue > 18) {
@@ -35,7 +35,7 @@ function App() {
 
  
   const [rangeValue, setRangeValue] = useState(10);
-  const [show, setShow, isOpen] = useState(false); */
+  const [show, setShow, isOpen] = useState(false);
 
 return (
   <div>
@@ -47,12 +47,11 @@ return (
     <input id="end" type="text"></input>
     <div>
       <CoffeeSlider
-        min={0}
-        max={100}
+        
         step={1}
         defaultValue={1}
         value={rangeValue}
-        onChangeValue={OnChangeSlider}
+        onChangeValue={onChangeSlider}
       />
     </div>
     <div className="modal-button">
@@ -66,6 +65,7 @@ return (
         zoom={8}
         center={center}
         resetBoundsOnResize={true}
+        rangeValue={rangeValue}
       ></Gmap>
     </div>
   </div>

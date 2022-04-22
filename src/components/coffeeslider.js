@@ -16,12 +16,12 @@ const CoffeeSlider = (props) => {
     } = props;
     console.log(value)
     
-    const rangeRef = useRef(onChangeValue);
     const [range, setRange] = useState(defaultValue);
-    const handleChange = max => e =>{
+    const handleChange = e =>{
         onChangeValue(e)
+        console.log(e.target.value)
         setRange(e.target.value);
-        console.log(setRange)
+        
 /*         this.setState({sliderValue})
  */    }
 
@@ -35,15 +35,14 @@ const CoffeeSlider = (props) => {
         <div className="coffecup">
           Cups of Joe
           <input
-            ref={rangeRef}
             className="cupsofjoe"
             type="range"
             step={step}
-            min={min}
-            max={max}
+            min='0'
+            max='100'
             /* defaultValue = '1' */
             value={value}
-            onChange={handleChange(max)}
+            onChange={handleChange}
           />
           <span className="range-slider-value">{range}</span>
         </div>
