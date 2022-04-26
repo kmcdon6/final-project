@@ -3,7 +3,7 @@ import "./App.css";
 import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
 import React, { useState } from 'react'
-
+import Placefinder from './components/PlaceFinder.js'
 
 
 /* import ModalPopUp from './components/modalpopup.js' */
@@ -30,7 +30,13 @@ function App() {
   const [rangeValue, setRangeValue] = useState(10);
   const [show, setShow, isOpen] = useState(false);
 
-
+// const cors = require('cors')
+// const corsOptions ={
+//   origin:'http://localhost:3000',
+//   credentials:true,
+//   optionSuccessStatus:200
+// }
+// App.use(cors(corsOptions))
 
 
 return (
@@ -63,8 +69,11 @@ return (
         resetBoundsOnResize={true}
       ></Gmap>
     </div>
+    <div>
+      <Placefinder></Placefinder>
+    </div>
   </div>
 );
-}
 
-export default App; {}
+}
+export default App()

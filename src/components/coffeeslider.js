@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect }from "react";
 import "./coffeeslider.css";
 import Modal from "./modal.js";
+import Gmap from "./map.js"
 
 
 const CoffeeSlider = (props) => {
@@ -13,6 +14,9 @@ const CoffeeSlider = (props) => {
         onChangeValue,
         openModal,
     } = props;
+
+    console.log(value)
+    
 
     const rangeRef = useRef();
     const [range, setRange] = useState(defaultValue);

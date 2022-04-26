@@ -37,7 +37,7 @@ export default function Gmap () {
     if(!isLoaded) return "Finding your coffee";
 
 
-
+    console.log(distance)
 
     async function calculatePath(){
         if (originRef.current.value === '' || destinationRef.current.value === ''){
@@ -54,6 +54,8 @@ export default function Gmap () {
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
+        console.log(this.results.routes[0].legs[0].distance.text)
+        console.log(this.props.distance)
     }
 
 
