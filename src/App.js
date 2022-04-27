@@ -4,6 +4,7 @@ import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
 import React, { useState } from 'react'
 import Placefinder from './components/PlaceFinder.js'
+import PlaceFind from './components/PlaceFinder.js';
 
 
 /* import ModalPopUp from './components/modalpopup.js' */
@@ -72,8 +73,11 @@ return (
     <div>
       <Placefinder></Placefinder>
     </div>
+    <div>
+      <PlaceFind></PlaceFind>
+    </div>
   </div>
 );
 
 }
-export default App()
+export default App();
