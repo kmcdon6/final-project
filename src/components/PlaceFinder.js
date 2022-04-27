@@ -21,14 +21,14 @@ import React from "react"
     }
 
 
-export function PlaceFind() {
-    const placeSearchRequest = new google.maps.places.PlaceSearchRequest()
+// export function PlaceFind() {
+//     const placeSearchRequest = new google.maps.places.PlaceSearchRequest()
 
-    return(
-        console.log(placeSearchRequest)
-    )
+//     return(
+//         console.log(placeSearchRequest)
+//     )
 
-}
+// }
 
 
 
