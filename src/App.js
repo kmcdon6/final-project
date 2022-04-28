@@ -39,12 +39,7 @@ function App() {
 
 return (
   <div>
-    <h1>Buzz Path</h1>
-
-    <b>Start: </b>
-    <input id="start" type="text"></input>
-    <b>End: </b>
-    <input id="end" type="text"></input>
+    
     <div>
       <CoffeeSlider
         

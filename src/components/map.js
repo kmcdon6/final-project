@@ -45,23 +45,29 @@ export default function Gmap ({rangeValue}) {
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
 /* Micah's Code */  
-      async function findLegsLength(){
+      function findLegsLength(){
       console.log(rangeValue)     
       console.log(directionsResponse.routes[0].legs[0].distance.value);
 
       const tripDistance = directionsResponse.routes[0].legs[0].distance.value
       const stops = 2
-
-      const newLegLength = tripDistance/stops
+      const newLegLength = tripDistance / (stops + 1)
+      
       console.log(newLegLength)
-      console.log(directionsResponse);
+      console.log('DIRSRESPONSE:', directionsResponse);
+      return newLegLength;
       }
 
-      findLegsLength()
+   
 
 /*End Micah's Code */
 /* Other BS Code */
-async function getMarkers (route,distanceBetweenStops, markerOptions) { 
+/* variables pulled from OG HTML file
+var renderer=new google.maps.DirectionsRenderer(route.rendering);
+const dirs = direction.renderer.getDirections();
+const route = dirs.routes[0];*/
+
+async function getMarkers () { 
   console.log('Get Markers Gets Called')       
   let markers=[],
       geo=google.maps.geometry.spherical,
@@ -70,7 +76,12 @@ async function getMarkers (route,distanceBetweenStops, markerOptions) {
       distance=0,
       leg,
       overflow,
-      markerPosition;
+      markerPosition,
+      distanceBetweenStops = findLegsLength(),
+      markerOptions = {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+      };
+      
     
     // For each point on the path
     path.forEach(pointOnPath => {
@@ -89,12 +100,17 @@ async function getMarkers (route,distanceBetweenStops, markerOptions) {
       }
       point = pointOnPath
     });
-
+/* latlngs of markers*/
   markers.forEach(marker => console.log(marker.position.lat(), marker.position.lng()))
+  console.log('PATH:', path);
   return markers;}
 
   getMarkers()
  /*End Other BS Code */
+ const waypts = [];
+
+
+ const testingWaypoints = '220 Red Oak Ave, Durham, NC 27707, USA'
       
       
 
@@ -126,7 +142,13 @@ async function getMarkers (route,distanceBetweenStops, markerOptions) {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
-        
+          waypoints:[
+            {
+              location: testingWaypoints,
+              stopover: true
+            },
+          ]
+          
         });
             
         setDirectionsResponse(results)
