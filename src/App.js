@@ -34,17 +34,11 @@ function App() {
   };
 
  
-  const [rangeValue, setRangeValue] = useState(10);
+  const [rangeValue, setRangeValue] = useState(1);
   const [show, setShow, isOpen] = useState(false);
 
 return (
   <div>
-    <h1>Buzz Path</h1>
-
-    <b>Start: </b>
-    <input id="start" type="text"></input>
-    <b>End: </b>
-    <input id="end" type="text"></input>
     <div>
       <CoffeeSlider
         
