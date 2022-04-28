@@ -1,10 +1,11 @@
+/* global google */
 import {
   useLoadScript,
   GoogleMap,
   Autocomplete,
   DirectionsRenderer,
   Marker,
-} from "@react-google-maps/api";
+ } from "@react-google-maps/api";
 import React, { useState, useRef } from 'react'
 import "./maps.css"
 
@@ -43,8 +44,61 @@ export default function Gmap ({rangeValue}) {
 
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
-       console.log(rangeValue)     
+/* Micah's Code */  
+      async function findLegsLength(){
+      console.log(rangeValue)     
+      console.log(directionsResponse.routes[0].legs[0].distance.value);
 
+      const tripDistance = directionsResponse.routes[0].legs[0].distance.value
+      const stops = 2
+
+      const newLegLength = tripDistance/stops
+      console.log(newLegLength)
+      console.log(directionsResponse);
+      }
+
+      findLegsLength()
+
+/*End Micah's Code */
+/* Other BS Code */
+async function getMarkers (route,distanceBetweenStops, markerOptions) { 
+  console.log('Get Markers Gets Called')       
+  let markers=[],
+      geo=google.maps.geometry.spherical,
+      path=directionsResponse.routes[0].overview_path,
+      point=path[0],
+      distance=0,
+      leg,
+      overflow,
+      markerPosition;
+    
+    // For each point on the path
+    path.forEach(pointOnPath => {
+      // Set the distance of the leg to (previous point distances) + (distance from last point to current point)
+      leg = Math.round(geo.computeDistanceBetween(point, pointOnPath));
+      let d1 = distance + 0
+      distance += leg;        
+      overflow = distanceBetweenStops - (d1 % distanceBetweenStops);
+      
+      // Once the leg is >= to the desired distance between points, create the new marker and push it to markers
+      if(distance >= distanceBetweenStops && leg >= overflow) {
+          markerPosition = geo.computeOffset(point,overflow,geo.computeHeading(point,pointOnPath));
+          markerOptions.position = markerPosition;
+          markers.push(new google.maps.Marker(markerOptions));
+          distance -= distanceBetweenStops;
+      }
+      point = pointOnPath
+    });
+
+  markers.forEach(marker => console.log(marker.position.lat(), marker.position.lng()))
+  return markers;}
+
+  getMarkers()
+ /*End Other BS Code */
+      
+      
+
+      
    
    
  /* async function coffeeStops({rangeValue}) { */
@@ -55,8 +109,9 @@ export default function Gmap ({rangeValue}) {
             console.log(coffeeDistance)
             return coffeeDistance;
             console.log({distance}); */
-            
-            
+
+
+
           
     async function calculatePath(){
        
