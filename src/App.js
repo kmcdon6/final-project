@@ -34,12 +34,11 @@ function App() {
   };
 
  
-  const [rangeValue, setRangeValue] = useState(10);
+  const [rangeValue, setRangeValue] = useState(1);
   const [show, setShow, isOpen] = useState(false);
 
 return (
   <div>
-    
     <div>
       <CoffeeSlider
         

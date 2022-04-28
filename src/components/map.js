@@ -45,39 +45,34 @@ export default function Gmap ({rangeValue}) {
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
 /* Micah's Code */  
-      function findLegsLength(){
+      function findLegsLength(route){
       console.log(rangeValue)     
-      console.log(directionsResponse.routes[0].legs[0].distance.value);
+      console.log(route.legs[0].distance.value);
 
-      const tripDistance = directionsResponse.routes[0].legs[0].distance.value
-      const stops = 2
-      const newLegLength = tripDistance / (stops + 1)
+      const tripDistance = route.legs[0].distance.value
+      const newLegLength = tripDistance / (rangeValue)
+      console.log(typeof rangeValue)
       
-      console.log(newLegLength)
-      console.log('DIRSRESPONSE:', directionsResponse);
       return newLegLength;
       }
 
    
 
 /*End Micah's Code */
-/* Other BS Code */
-/* variables pulled from OG HTML file
-var renderer=new google.maps.DirectionsRenderer(route.rendering);
-const dirs = direction.renderer.getDirections();
-const route = dirs.routes[0];*/
+/* Sets Marker LatLngs */
 
-async function getMarkers () { 
+
+function getMarkerPositions (route) { 
   console.log('Get Markers Gets Called')       
   let markers=[],
       geo=google.maps.geometry.spherical,
-      path=directionsResponse.routes[0].overview_path,
+      path=route.overview_path,
       point=path[0],
       distance=0,
       leg,
       overflow,
       markerPosition,
-      distanceBetweenStops = findLegsLength(),
+      distanceBetweenStops = findLegsLength(route),
       markerOptions = {
         icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
       };
@@ -101,16 +96,17 @@ async function getMarkers () {
       point = pointOnPath
     });
 /* latlngs of markers*/
-  markers.forEach(marker => console.log(marker.position.lat(), marker.position.lng()))
+  markers.forEach(function(marker) {
+    console.log(marker.position.lat(), marker.position.lng())
+  } )
   console.log('PATH:', path);
-  return markers;}
+  return markers.map(function(marker){
+    return {lat: marker.position.lat(), lng: marker.position.lng()}
+  });}
 
-  getMarkers()
+  
  /*End Other BS Code */
- const waypts = [];
-
-
- const testingWaypoints = '220 Red Oak Ave, Durham, NC 27707, USA'
+ 
       
       
 
@@ -142,15 +138,11 @@ async function getMarkers () {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
-          waypoints:[
-            {
-              location: testingWaypoints,
-              stopover: true
-            },
-          ]
+          
           
         });
-            
+        const markerPositions = getMarkerPositions(results.routes[0]) 
+        console.log('MKRPOS:', markerPositions)  
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
