@@ -3,6 +3,7 @@ import "./App.css";
 import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
 import React, { useState } from 'react'
+import PlaceFinder from './components/placeFinder.js'
 /* import onChangeSlider from "./components/slidervalue.js";
 import rangeValue from "./components/slidervalue.js";
 import setShow from "./components/slidervalue.js";
@@ -52,7 +53,9 @@ return (
       <button onClick={() => setShow(true)}>Coffee Addiction?</button>
       <Modal onClose={() => setShow(false)} show={show} />
     </div>
-      
+  <div>
+    <PlaceFinder></PlaceFinder>
+  </div>
     <div className="gmaps">
       <Gmap
         mapContainerStyle={mapContainerStyle}

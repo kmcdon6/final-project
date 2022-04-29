@@ -44,7 +44,7 @@ export default function Gmap ({rangeValue}) {
 
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
-/* Micah's Code */  
+/*Sets Markers Code Start*/  
       function findLegsLength(route){
       console.log(rangeValue)     
       console.log(route.legs[0].distance.value);
@@ -58,8 +58,8 @@ export default function Gmap ({rangeValue}) {
 
    
 
-/*End Micah's Code */
-/* Sets Marker LatLngs */
+
+
 
 
 function getMarkerPositions (route) { 
@@ -105,7 +105,7 @@ function getMarkerPositions (route) {
   });}
 
   
- /*End Other BS Code */
+ /*Sets Markers Code End*/
  
       
       
@@ -138,10 +138,34 @@ function getMarkerPositions (route) {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
+            
+          
+
+          
           
           
         });
+
+        function getPlaces () {
+          var request = {
+            location: {lat: 35.919131902638696, lng: -78.90083081212661},
+            radius: 5000,
+            type: 'coffee',
+          }
+          service = new google.maps.places.PlacesService(map);
+          service.nearbySearch(request, callback)
+
+        }
+        function callback(results, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+              console.log(results[i]);
+              return results
+      }
+    }
+  }
         const markerPositions = getMarkerPositions(results.routes[0]) 
+        const nearbyShops = getPlaces(results.places[0])
         console.log('MKRPOS:', markerPositions)  
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
