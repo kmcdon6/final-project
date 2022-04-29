@@ -54,7 +54,8 @@ return (
       <Modal onClose={() => setShow(false)} show={show} />
     </div>
   <div>
-    <PlaceFinder></PlaceFinder>
+    <PlaceFinder>
+    </PlaceFinder>
   </div>
     <div className="gmaps">
       <Gmap
@@ -63,6 +64,7 @@ return (
         center={center}
         resetBoundsOnResize={true}
         rangeValue={rangeValue}
+        placeFinder={PlaceFinder}
       ></Gmap>
     </div>
   </div>

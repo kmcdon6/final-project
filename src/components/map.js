@@ -8,6 +8,7 @@ import {
  } from "@react-google-maps/api";
 import React, { useState, useRef } from 'react'
 import "./maps.css"
+import PlaceFinder from './placeFinder.js'
 
  
 
@@ -102,8 +103,11 @@ function getMarkerPositions (route) {
   console.log('PATH:', path);
   return markers.map(function(marker){
     return {lat: marker.position.lat(), lng: marker.position.lng()}
-  });}
 
+   
+    
+  });}
+  
   
  /*Sets Markers Code End*/
  
@@ -146,26 +150,10 @@ function getMarkerPositions (route) {
           
         });
 
-        function getPlaces () {
-          var request = {
-            location: {lat: 35.919131902638696, lng: -78.90083081212661},
-            radius: 5000,
-            type: 'coffee',
-          }
-          service = new google.maps.places.PlacesService(map);
-          service.nearbySearch(request, callback)
+        
 
-        }
-        function callback(results, status) {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
-              console.log(results[i]);
-              return results
-      }
-    }
-  }
+        
         const markerPositions = getMarkerPositions(results.routes[0]) 
-        const nearbyShops = getPlaces(results.places[0])
         console.log('MKRPOS:', markerPositions)  
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
