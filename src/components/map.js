@@ -34,6 +34,8 @@ export default function Gmap ({rangeValue}) {
                 const [duration, setDuration] = useState("");
                 const [coffeeLat, setCoffeeLat] = useState(null);
                 const [coffeeLng, setCoffeeLng] = useState(null);
+              
+
                 const originRef = useRef();
                 const destinationRef = useRef();
     const { isLoaded, loaderror } = useLoadScript({
@@ -60,94 +62,98 @@ function findLegsLength(route){
       }
 
 
-function getMarkerPositions (route) { 
+ function getMarkerPositions (route) { 
   console.log('Get Markers Gets Called')  
-      
-let markers=[],
-      geo=google.maps.geometry.spherical,
-      path=route.overview_path,
-      point=path[0],
-      distance=0,
-      leg,
-      overflow,
-      markerPosition,
-      distanceBetweenStops = findLegsLength(route),
-      markerOptions = {
-        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',      
-      };
-      
-    // For each point on the path
-    path.forEach(pointOnPath => {
-      // Set the distance of the leg to (previous point distances) + (distance from last point to current point)
-      leg = Math.round(geo.computeDistanceBetween(point, pointOnPath));
-      let d1 = distance + 0
-      distance += leg;        
-      overflow = distanceBetweenStops - (d1 % distanceBetweenStops);
-      
-      // Once the leg is >= to the desired distance between points, create the new marker and push it to markers
-      if(distance >= distanceBetweenStops && leg >= overflow) {
-          markerPosition = geo.computeOffset(point,overflow,geo.computeHeading(point,pointOnPath));
-          markerOptions.position = markerPosition;
-          markers.push(new google.maps.Marker(markerOptions));
-          distance -= distanceBetweenStops;
-      }
-      point = pointOnPath
-    });
-  
+   
+     let markers = [],
+       geo = google.maps.geometry.spherical,
+       path = route.overview_path,
+       point = path[0],
+       distance = 0,
+       leg,
+       overflow,
+       markerPosition,
+       distanceBetweenStops = findLegsLength(route),
+       markerOptions = {
+         icon: "http://labs.google.com/ridefinder/images/mm_20_blue.png",
+       };
 
+     // For each point on the path
+     path.forEach(pointOnPath => {
+       // Set the distance of the leg to (previous point distances) + (distance from last point to current point)
+       leg = Math.round(geo.computeDistanceBetween(point, pointOnPath));
+       let d1 = distance + 0;
+       distance += leg;
+       overflow = distanceBetweenStops - (d1 % distanceBetweenStops);
 
+       // Once the leg is >= to the desired distance between points, create the new marker and push it to markers
+       if (distance >= distanceBetweenStops && leg >= overflow) {
+         markerPosition = geo.computeOffset(
+           point,
+           overflow,
+           geo.computeHeading(point, pointOnPath)
+         );
+         markerOptions.position = markerPosition;
+         markers.push(new google.maps.Marker(markerOptions));
+         distance -= distanceBetweenStops;
+       }
+       point = pointOnPath;
+     });
 
+     /* latlngs of markers*/
+     
+         markers.forEach(function (marker) {
+           console.log(marker.position.lat(), marker.position.lng());
 
+           console.log("function gets called");
+           const coffeeList = [];
+           const url =
+             "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+           const location = `location=${marker.position.lat()},${marker.position.lng()}`;
+           const radius = "&radius=5000";
+           const keyword = "&keyword=coffee";
+           const key = "&key=AIzaSyCKz0oLVBeWPeIZBLO-JALpTrQCFTz_Fg8";
+           const restaurantSearchUrl = url + location + radius + keyword + key;
 
-/* latlngs of markers*/
-  
-  markers.forEach(function(marker) {
-    console.log(marker.position.lat(), marker.position.lng())
-  
-                console.log("function gets called");
-                const coffeeList = []
-                const url =
-                  "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-                const location = `location=${marker.position.lat()},${marker.position.lng()}`;
-                const radius = "&radius=5000";
-                const keyword = "&keyword=coffee";
-                const key = "&key=AIzaSyCKz0oLVBeWPeIZBLO-JALpTrQCFTz_Fg8";
-                const restaurantSearchUrl =
-                  url + location + radius + keyword + key;
+           fetch(restaurantSearchUrl)
+             .then((response) => response.json())
+             .then(
+               (data) => (
+                 console.log(
+                   data.results[0].geometry.location.lat,
+                   data.results[0].geometry.location.lng
+                 ),
                 
-               return (
-                 fetch(restaurantSearchUrl)
-                   .then((response) => response.json())
-                   .then((data) =>
-                      console.log(
-                        data,
-                        data.results[0].geometry.location.lat,
-                        data.results[0].geometry.location.lng
-                      )
-                  
-                    )
-                   .then(
-                     (data) => (
-                      setCoffeeLat(data.results[0].geometry.location.lat),
-                      setCoffeeLng(data.results[0].geometry.location.lng)
-                     ))
-                   
-               );
-                
-                   
-          })
-       
+                 coffeeList.push(
+                   data.results[0].geometry.location.lat, 
+                   data.results[0].geometry.location.lng
+                 ),
               
-/*   console.log(markerPosition);
-  console.log('PATH:', path); */
- 
-console.log('coffee lat: ', coffeeLat)
-console.log('coffeelong', coffeeLng)
-console.log(markers)
-  return markers.map(function(marker){
-    return {lat: coffeeLat, lng: coffeeLng}
- });}
+                 setCoffeeLat( coffeeList[0]),
+                 setCoffeeLng( coffeeList[1])
+                 )
+                 /* setCoffeeLat(data.results[0].geometry.location.lat),
+                 setCoffeeLng(data.results[0].geometry.location.lng) */
+               
+             );
+             console.log('coffeeList',coffeeList);
+            
+             console.log('setCoffeeLat', setCoffeeLat)
+             
+             console.log('setCoffeeLng', setCoffeeLng)
+         });
+      
+     /*   console.log(markerPosition);
+  console.log('PATH:', path); */ 
 
+     console.log("coffee lat: ", coffeeLat);
+    console.log("coffee lng:", coffeeLng)
+     console.log(markers)
+     return markers.map(function (marker){
+       return { lat: coffeeLat, lng: coffeeLng }
+     });}
+    
+ 
 
     
 
@@ -168,13 +174,13 @@ console.log(markers)
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
           /* waypoints:[{ location:{lat: coffeeLat,lng: coffeeLng }, 
-          stopover:true}]   */
+          stopover:true}] */  
         });
-        console.log(results, "waypoints")
+        /* console.log(results, "waypoints") */
 
         
 
-        
+       
     const markerPositions = getMarkerPositions(results.routes[0]);
     console.log(typeof("MKRPOS:", markerPositions));
     markerPositions.map( markerPositions => {
