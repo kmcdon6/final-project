@@ -1,5 +1,6 @@
 /* global google */
 import {
+  Component,
   useLoadScript,
   GoogleMap,
   Autocomplete,
@@ -8,6 +9,11 @@ import {
  } from "@react-google-maps/api";
 import React, { useState, useRef } from 'react'
 import "./maps.css"
+import PlaceFinder from './placeFinder.js'
+import Button from '@mui/material/Button'
+import { ForkRight } from "@mui/icons-material";
+import { borderRight, flexbox } from "@mui/system";
+
 
  
 
@@ -15,11 +21,12 @@ import "./maps.css"
 
 const center = {lat: 35.9940,lng: -78.8986}
 const libraries = ["places"]
-const mapContainerStyle = {
-    width: "100%",
-    height: "100%",
-    overflow: "visible",
-    resetBoundsOnResize: "true",
+ const mapContainerStyle = {
+  width: "55%",
+  height: "50%",
+  overflow: "visible",
+  resetBoundsOnResize: "true",
+     
 }
 
 
@@ -44,7 +51,7 @@ export default function Gmap ({rangeValue}) {
 
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
-/* Micah's Code */  
+/*Sets Markers Code Start*/  
       function findLegsLength(route){
       console.log(rangeValue)     
       console.log(route.legs[0].distance.value);
@@ -58,8 +65,8 @@ export default function Gmap ({rangeValue}) {
 
    
 
-/*End Micah's Code */
-/* Sets Marker LatLngs */
+
+
 
 
 function getMarkerPositions (route) { 
@@ -102,10 +109,13 @@ function getMarkerPositions (route) {
   console.log('PATH:', path);
   return markers.map(function(marker){
     return {lat: marker.position.lat(), lng: marker.position.lng()}
-  });}
 
+   
+    
+  });}
   
- /*End Other BS Code */
+  
+ /*Sets Markers Code End*/
  
       
       
@@ -138,9 +148,22 @@ function getMarkerPositions (route) {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
+          waypoints: [{
+            location: {lat: 35.8993503, lng: -78.8970799}, 
+            stopover: true
+          }
+            
+          ]
+          
+
+          
           
           
         });
+
+        
+
+        
         const markerPositions = getMarkerPositions(results.routes[0]) 
         console.log('MKRPOS:', markerPositions)  
         setDirectionsResponse(results)
@@ -153,25 +176,37 @@ function getMarkerPositions (route) {
 
     }
 
-
-
+async function printPlaceFinderResults () {await PlaceFinder(); 
+  {console.log('PlaceFinderFunctionCalled', PlaceFinder.data.results[0].place_id)}}
+printPlaceFinderResults()
 return (
   <div>
+  <div class="all-but-map">
+  <div class="flexbox-nav">
     <div>
+    <div>Next, we need to know</div>
       <Autocomplete>
-        <input type="text" placeholder="Origin" ref={originRef} />
+        <input type="text" placeholder="Where you're starting," ref={originRef} />
       </Autocomplete>
     </div>
+    <div>and</div>
     <div>
+    
       <Autocomplete>
-        <input type="text" placeholder="Destination" ref={destinationRef} />
+        <input type="text" placeholder="Where you're going." ref={destinationRef} />
       </Autocomplete>
+    </div>
+    <div>When you're ready</div>
+    <div>
+        <Button variant="contained" size="large" color="primary" type='submit' onClick={calculatePath}>Find your Buzzed Path</Button>
+    </div>
     </div>
     
-    <div>
-        <button type='submit' onClick={calculatePath}>Find your Buzzed Path</button>
     </div>
-    <div>
+    
+    <div className="flexbox-map">
+    <div class="flexbox-stats">
+    <h2 class="stats-title">Your Trip Stats</h2>
         <p>Distance: {distance}</p>
         
         <p>Duration: {duration}</p>
@@ -179,7 +214,7 @@ return (
 {/*         <p>Miles per Coffee: {intCoffee/rangeValue}</p>
  */}        
     </div>
-    <div className="coffeemap">
+    <div className="right-panel"></div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={8}
@@ -189,6 +224,8 @@ return (
             <DirectionsRenderer directions = {directionsResponse}/>
         )}</GoogleMap>
     </div>
+    
   </div>
 );
 }
+

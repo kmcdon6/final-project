@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect }from "react";
 import "./coffeeslider.css";
 import Modal from "./modal.js";
+import Slider from "@mui/material/Slider"
 
 
 const CoffeeSlider = (props) => {
@@ -32,15 +33,15 @@ const CoffeeSlider = (props) => {
 
     return (
       <>
-        <div className="coffecup">
-          Cups of Joe
-          <input
+        <div className="coffeecup">
+          First of all, how many cups o' Joe do you want?
+          <input           
             className="cupsofjoe"
             type="range"
             step={step}
             min='0'
-            max='100'
-            /* defaultValue = '1' */
+            max='20'
+            //  defaultValue = '1' 
             value={value}
             onChange={handleChange}
           />

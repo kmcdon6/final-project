@@ -6,5 +6,42 @@
     padding-left: 0;
     padding-top: 0;
     z-index: 2;
+}
 
+.flex-container-1 {
+    display: flex;
+    font-family: 'Roboto';
+    flex-direction: column;
+}
+
+.flex-buzzpath{
+    font-weight:400;
+    color: #0288d1;
+    display: flex;
+    align-self: center;
+}
+.flex-title {
+    font-weight: lighter;
+    color: #0288d1;
+    display: flex;
+    align-self: center;
+    
+}
+.flex-container-2 {
+    
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+.flex-container-3 {
+    align-self: center;
+    padding-right: 1400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.stats-title {
+    font-weight: 400;
+    color: #0288d1;
 }
