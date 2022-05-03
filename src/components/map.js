@@ -1,5 +1,6 @@
 /* global google */
 import {
+  Component,
   useLoadScript,
   GoogleMap,
   Autocomplete,
@@ -9,6 +10,10 @@ import {
 import React, { useState, useRef } from 'react'
 import "./maps.css"
 import PlaceFinder from './placeFinder.js'
+import Button from '@mui/material/Button'
+import { ForkRight } from "@mui/icons-material";
+import { borderRight, flexbox } from "@mui/system";
+
 
  
 
@@ -16,11 +21,12 @@ import PlaceFinder from './placeFinder.js'
 
 const center = {lat: 35.9940,lng: -78.8986}
 const libraries = ["places"]
-const mapContainerStyle = {
-    width: "100%",
-    height: "100%",
-    overflow: "visible",
-    resetBoundsOnResize: "true",
+ const mapContainerStyle = {
+  width: "55%",
+  height: "50%",
+  overflow: "visible",
+  resetBoundsOnResize: "true",
+     
 }
 
 
@@ -142,7 +148,12 @@ function getMarkerPositions (route) {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
+          waypoints: [{
+            location: {lat: 35.8993503, lng: -78.8970799}, 
+            stopover: true
+          }
             
+          ]
           
 
           
@@ -165,25 +176,37 @@ function getMarkerPositions (route) {
 
     }
 
-
-
+async function printPlaceFinderResults () {await PlaceFinder(); 
+  {console.log('PlaceFinderFunctionCalled', PlaceFinder.data.results[0].place_id)}}
+printPlaceFinderResults()
 return (
   <div>
+  <div class="all-but-map">
+  <div class="flexbox-nav">
     <div>
+    <div>Next, we need to know</div>
       <Autocomplete>
-        <input type="text" placeholder="Origin" ref={originRef} />
+        <input type="text" placeholder="Where you're starting," ref={originRef} />
       </Autocomplete>
     </div>
+    <div>and</div>
     <div>
+    
       <Autocomplete>
-        <input type="text" placeholder="Destination" ref={destinationRef} />
+        <input type="text" placeholder="Where you're going." ref={destinationRef} />
       </Autocomplete>
+    </div>
+    <div>When you're ready</div>
+    <div>
+        <Button variant="contained" size="large" color="primary" type='submit' onClick={calculatePath}>Find your Buzzed Path</Button>
+    </div>
     </div>
     
-    <div>
-        <button type='submit' onClick={calculatePath}>Find your Buzzed Path</button>
     </div>
-    <div>
+    
+    <div className="flexbox-map">
+    <div class="flexbox-stats">
+    <h2 class="stats-title">Your Trip Stats</h2>
         <p>Distance: {distance}</p>
         
         <p>Duration: {duration}</p>
@@ -191,7 +214,7 @@ return (
 {/*         <p>Miles per Coffee: {intCoffee/rangeValue}</p>
  */}        
     </div>
-    <div className="coffeemap">
+    <div className="right-panel"></div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={8}
@@ -201,6 +224,8 @@ return (
             <DirectionsRenderer directions = {directionsResponse}/>
         )}</GoogleMap>
     </div>
+    
   </div>
 );
 }
+
