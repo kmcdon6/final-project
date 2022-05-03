@@ -6,10 +6,11 @@ import {
   DirectionsRenderer,
   Marker,
  } from "@react-google-maps/api";
-import React, { useState, useRef } from 'react'
+import { render } from "@testing-library/react";
+import React, { useState, useRef, useEffect } from 'react'
 import "./maps.css"
-import PlaceFinder from './placeFinder.js'
-
+/* import PlaceFinder from './placeFinder.js'
+ */
  
 
 
@@ -31,8 +32,8 @@ export default function Gmap ({rangeValue}) {
                   useState(null);
                 const [distance, setDistance] = useState("");
                 const [duration, setDuration] = useState("");
-                
-                
+                const [coffeeLat, setCoffeeLat] = useState(null);
+                const [coffeeLng, setCoffeeLng] = useState(null);
                 const originRef = useRef();
                 const destinationRef = useRef();
     const { isLoaded, loaderror } = useLoadScript({
@@ -45,27 +46,24 @@ export default function Gmap ({rangeValue}) {
 
     const distCoffee = (distance.slice(0,-2))
     const intCoffee = Number(distCoffee)
+    const coffeeDistance = intCoffee / rangeValue;
 /*Sets Markers Code Start*/  
-      function findLegsLength(route){
+function findLegsLength(route){
       console.log(rangeValue)     
       console.log(route.legs[0].distance.value);
 
       const tripDistance = route.legs[0].distance.value
       const newLegLength = tripDistance / (rangeValue)
-      console.log(typeof rangeValue)
       
+      console.log(newLegLength)
       return newLegLength;
       }
 
-   
-
-
-
-
 
 function getMarkerPositions (route) { 
-  console.log('Get Markers Gets Called')       
-  let markers=[],
+  console.log('Get Markers Gets Called')  
+      
+let markers=[],
       geo=google.maps.geometry.spherical,
       path=route.overview_path,
       point=path[0],
@@ -75,10 +73,9 @@ function getMarkerPositions (route) {
       markerPosition,
       distanceBetweenStops = findLegsLength(route),
       markerOptions = {
-        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',      
       };
       
-    
     // For each point on the path
     path.forEach(pointOnPath => {
       // Set the distance of the leg to (previous point distances) + (distance from last point to current point)
@@ -96,38 +93,66 @@ function getMarkerPositions (route) {
       }
       point = pointOnPath
     });
+  
+
+
+
+
+
 /* latlngs of markers*/
+  
   markers.forEach(function(marker) {
     console.log(marker.position.lat(), marker.position.lng())
-  } )
-  console.log('PATH:', path);
+  
+                console.log("function gets called");
+                const coffeeList = []
+                const url =
+                  "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+                const location = `location=${marker.position.lat()},${marker.position.lng()}`;
+                const radius = "&radius=5000";
+                const keyword = "&keyword=coffee";
+                const key = "&key=AIzaSyCKz0oLVBeWPeIZBLO-JALpTrQCFTz_Fg8";
+                const restaurantSearchUrl =
+                  url + location + radius + keyword + key;
+                
+               return (
+                 fetch(restaurantSearchUrl)
+                   .then((response) => response.json())
+                   .then((data) =>
+                      console.log(
+                        data,
+                        data.results[0].geometry.location.lat,
+                        data.results[0].geometry.location.lng
+                      )
+                  
+                    )
+                   .then(
+                     (data) => (
+                      setCoffeeLat(data.results[0].geometry.location.lat),
+                      setCoffeeLng(data.results[0].geometry.location.lng)
+                     ))
+                   
+               );
+                
+                   
+          })
+       
+              
+/*   console.log(markerPosition);
+  console.log('PATH:', path); */
+ 
+console.log('coffee lat: ', coffeeLat)
+console.log('coffeelong', coffeeLng)
+console.log(markers)
   return markers.map(function(marker){
-    return {lat: marker.position.lat(), lng: marker.position.lng()}
+    return {lat: coffeeLat, lng: coffeeLng}
+ });}
 
-   
+
     
-  });}
-  
-  
+
  /*Sets Markers Code End*/
  
-      
-      
-
-      
-   
-   
- /* async function coffeeStops({rangeValue}) { */
-           const coffeeDistance = intCoffee /(rangeValue); 
-
-        /*   await calculatePath;
-          if (distance > 0) {
-            console.log(coffeeDistance)
-            return coffeeDistance;
-            console.log({distance}); */
-
-
-
           
     async function calculatePath(){
        
@@ -142,30 +167,29 @@ function getMarkerPositions (route) {
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
           travelMode: google.maps.TravelMode.DRIVING,
-            
-          
-
-          
-          
-          
+          /* waypoints:[{ location:{lat: coffeeLat,lng: coffeeLng }, 
+          stopover:true}]   */
         });
+        console.log(results, "waypoints")
 
         
 
         
-        const markerPositions = getMarkerPositions(results.routes[0]) 
-        console.log('MKRPOS:', markerPositions)  
+    const markerPositions = getMarkerPositions(results.routes[0]);
+    console.log(typeof("MKRPOS:", markerPositions));
+    markerPositions.map( markerPositions => {
+      console.log(markerPositions)
+    })
+              
+            
+       /*  placeFinder(markerPositions) */      
         setDirectionsResponse(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
-        
-        /* console.log(coffeeDistance) */
-        
+      
         
 
-    }
-
-
+  }
 
 return (
   <div>
@@ -179,28 +203,25 @@ return (
         <input type="text" placeholder="Destination" ref={destinationRef} />
       </Autocomplete>
     </div>
-    
     <div>
-        <button type='submit' onClick={calculatePath}>Find your Buzzed Path</button>
+      <button type="submit" onClick={calculatePath}>
+        Find your Buzzed Path
+      </button>
     </div>
     <div>
-        <p>Distance: {distance}</p>
-        
-        <p>Duration: {duration}</p>
-        <p>Miles per Coffee: {coffeeDistance}</p>
-{/*         <p>Miles per Coffee: {intCoffee/rangeValue}</p>
- */}        
+      <p>Distance: {distance}</p>
+      <p>Duration: {duration}</p>
+      <p>Miles per Coffee: {coffeeDistance}</p>  
     </div>
     <div className="coffeemap">
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={8}
-        center={center}
-      ><Marker position={center}/>
+      <GoogleMap mapContainerStyle={mapContainerStyle} zoom={8} center={center}>
+        <Marker position={center} />
         {directionsResponse && (
-            <DirectionsRenderer directions = {directionsResponse}/>
-        )}</GoogleMap>
+          <DirectionsRenderer directions={directionsResponse} />
+        )}
+      </GoogleMap>
     </div>
   </div>
 );
-}
+
+        }

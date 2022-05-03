@@ -39,7 +39,7 @@ const CoffeeSlider = (props) => {
             type="range"
             step={step}
             min='0'
-            max='100'
+            max='20'
             /* defaultValue = '1' */
             value={value}
             onChange={handleChange}

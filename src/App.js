@@ -2,8 +2,9 @@ import Modal from './components/modal.js'
 import "./App.css";
 import Gmap from './components/map.js'
 import CoffeeSlider from './components/coffeeslider.js'
-import React, { useState } from 'react'
-import PlaceFinder from './components/placeFinder.js'
+import React, { createContext, useState } from 'react'
+import PlaceFinder from './components/map.js'
+import GetMarkerPositions, {markers} from "./components/map.js"
 /* import onChangeSlider from "./components/slidervalue.js";
 import rangeValue from "./components/slidervalue.js";
 import setShow from "./components/slidervalue.js";
@@ -11,6 +12,8 @@ import show from "./components/slidervalue.js"; */
 /* import onChangeSlider from "./components/slidervalue.js"
  */
 /* import ModalPopUp from './components/modalpopup.js' */
+
+
 
 
 const center = { lat: 35.9940, lng: -78.8986 };
@@ -23,26 +26,27 @@ const mapContainerStyle = {
 
 
 
-function App() {
+function App(props) {
 
 
   const onChangeSlider = (e) => {
     console.log(rangeValue);
     setRangeValue(parseInt(e.target.value, 10));
-    if (rangeValue > 18) {
+    if (rangeValue > 19) {
       let openModal = setShow(true);
     }
   };
+  
 
- 
+
   const [rangeValue, setRangeValue] = useState(1);
   const [show, setShow, isOpen] = useState(false);
+  
 
 return (
   <div>
     <div>
       <CoffeeSlider
-        
         step={1}
         defaultValue={1}
         value={rangeValue}
@@ -53,10 +57,9 @@ return (
       <button onClick={() => setShow(true)}>Coffee Addiction?</button>
       <Modal onClose={() => setShow(false)} show={show} />
     </div>
-  <div>
-    <PlaceFinder>
-    </PlaceFinder>
-  </div>
+    <div>
+    
+    </div>
     <div className="gmaps">
       <Gmap
         mapContainerStyle={mapContainerStyle}
@@ -64,7 +67,7 @@ return (
         center={center}
         resetBoundsOnResize={true}
         rangeValue={rangeValue}
-        placeFinder={PlaceFinder}
+        
       ></Gmap>
     </div>
   </div>

@@ -8,7 +8,7 @@ from '@react-google-maps/api'
 import axios from 'axios'
 
 
-function PlacesFinder () {
+/* function PlacesFinder () { */
     
     
 
@@ -17,13 +17,13 @@ function PlacesFinder () {
       //.then(result => this.setState({restaurantList: result}))
       //console.log(restaurantList)
       //return(restaurantList)
-  }
+/*   }
 
-   PlacesFinder()
+   PlacesFinder() */
    
  
-
-export default PlacesFinder
+/* 
+export default PlacesFinder */
 //this is the api call w/ non working cors handling
 /*const restaurantList = []
     const url  = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
