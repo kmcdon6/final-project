@@ -51,19 +51,15 @@ export default function Gmap ({rangeValue}) {
     const coffeeDistance = intCoffee / rangeValue;
 /*Sets Markers Code Start*/  
 function findLegsLength(route){
-      console.log(rangeValue)     
-      console.log(route.legs[0].distance.value);
 
       const tripDistance = route.legs[0].distance.value
       const newLegLength = tripDistance / (rangeValue)
       
-      console.log(newLegLength)
       return newLegLength;
       }
 
 
- function getMarkerPositions (route) { 
-  console.log('Get Markers Gets Called')  
+ function getMarkerPositions (route) {  
    
      let markers = [],
        geo = google.maps.geometry.spherical,
@@ -104,7 +100,7 @@ function findLegsLength(route){
      const coffeeListLat = [];
      const coffeeListLng=[];
          markers.forEach(function (marker) {
-           console.log(marker.position.lat(), marker.position.lng());
+           
 
            console.log("function gets called");
            
@@ -137,8 +133,8 @@ function findLegsLength(route){
                
              );
          });
-         
- 
+        }
+        
 
  setCoffeeLat(coffeeListLat)
 
@@ -149,9 +145,13 @@ function findLegsLength(route){
 console.log('coffeeListLat',coffeeListLat)
 console.log('coffeeListLng', coffeeListLng)
 
-     console.log("coffee lat: ", coffeeLat);
-    console.log("coffee lng:", coffeeLng)
+        setCoffeeLat(coffeeListLat)
+        setCoffeeLng(coffeeListLng)
 
+        console.log("NewCoffeeListLat:", coffeeLat)
+         
+   /*   console.log("coffee lat: ", coffeeLat);
+    console.log("coffee lng:", coffeeLng)
      return markers.map(function (marker){
        return { lat: coffeeLat, lng: coffeeLng }
      });}
@@ -160,7 +160,7 @@ console.log('coffeeListLng', coffeeListLng)
 
  /*Sets Markers Code End*/
  
-          
+         
     async function calculatePath(){
        
         if (originRef.current.value === '' || destinationRef.current.value === ''){
@@ -183,9 +183,8 @@ console.log('coffeeListLng', coffeeListLng)
       
        
     const markerPositions = getMarkerPositions(results.routes[0]);
-    console.log(typeof("MKRPOS:", markerPositions));
+    
     markerPositions.map( markerPositions => {
-
     })
          
             
@@ -230,5 +229,4 @@ return (
     </div>
   </div>
 );
-
         }
