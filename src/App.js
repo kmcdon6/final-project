@@ -57,9 +57,6 @@ return (
       <button onClick={() => setShow(true)}>Coffee Addiction?</button>
       <Modal onClose={() => setShow(false)} show={show} />
     </div>
-    <div>
-    
-    </div>
     <div className="gmaps">
       <Gmap
         mapContainerStyle={mapContainerStyle}
@@ -67,7 +64,6 @@ return (
         center={center}
         resetBoundsOnResize={true}
         rangeValue={rangeValue}
-        
       ></Gmap>
     </div>
   </div>
