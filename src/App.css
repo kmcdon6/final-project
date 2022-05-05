@@ -34,9 +34,9 @@
     align-self: center;
 }
 
-.flex-container-3 {
+.map-container {
     align-self: center;
-    padding-right: 1400px;
+    padding-right: 1200px;
     display: flex;
     flex-direction: column;
 }
@@ -44,4 +44,11 @@
 .stats-title {
     font-weight: 400;
     color: #0288d1;
+}
+
+.flex-logo {
+    display: flex;
+    align-self: center;
+    max-width:auto;
+    height: auto;
 }

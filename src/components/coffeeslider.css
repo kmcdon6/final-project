@@ -1,4 +1,5 @@
 .coffeecup {
+    padding-top: 20px;
     display: flex;
     flex-flow: column;
     align-items: center;

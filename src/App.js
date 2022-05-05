@@ -9,6 +9,8 @@ import ReactDom from 'react-dom';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import '@fontsource/roboto/500.css';
+
+const logo = new URL("./assets/images/buzzpath_black.png", import.meta.url)
 /* import onChangeSlider from "./components/slidervalue.js";
 import rangeValue from "./components/slidervalue.js";
 import setShow from "./components/slidervalue.js";
@@ -43,7 +45,10 @@ function App() {
 
 return (
   <div class= "flex-container-1">
-  <h1 class="flex-title">Welcome to <h1 class="flex-buzzpath">BUZZPATH</h1></h1>
+  <div class="flex-logo">
+  <img src={logo}/>
+  </div>
+  {/* <h1 class="flex-title">Welcome to <h1 class="flex-buzzpath">BUZZPATH</h1></h1> */}
   <div class="flex-container-2">
     <div >
       <CoffeeSlider
@@ -65,7 +70,7 @@ return (
     getMarkerPositions={getMarkerPositions}>
     </PlaceFinder>
   </div>
-  <div class="flex-container-3">
+  <div class="map-container">
     <div className="gmaps">
       <Gmap 
         mapContainerStyle={mapContainerStyle}
