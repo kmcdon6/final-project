@@ -13,8 +13,6 @@ import "./maps.css"
  */
  
 
-
-
 const center = {lat: 35.9940,lng: -78.8986}
 const libraries = ["places"]
 const mapContainerStyle = {
@@ -25,16 +23,11 @@ const mapContainerStyle = {
 }
 
 
-export default function Gmap ({rangeValue}) {
-    
-                const [map, setMap] = useState(null);
+export default function Gmap ({rangeValue}) {  
                 const [directionsResponse, setDirectionsResponse] =
                   useState(null);
                 const [distance, setDistance] = useState("");
-                const [duration, setDuration] = useState("");
-                const [coffeeLat, setCoffeeLat] = useState(null);
-                const [coffeeLng, setCoffeeLng] = useState(null);
-              
+                const [duration, setDuration] = useState("");              
 
                 const originRef = useRef();
                 const destinationRef = useRef();
@@ -53,13 +46,13 @@ export default function Gmap ({rangeValue}) {
 function findLegsLength(route){
 
       const tripDistance = route.legs[0].distance.value
-      const newLegLength = tripDistance / (rangeValue)
+      const newLegLength = tripDistance / (rangeValue + 1)
       
       return newLegLength;
       }
 
 
- function getMarkerPositions (route) {  
+ async function getMarkerPositions (route) {  
    
      let markers = [],
        geo = google.maps.geometry.spherical,
@@ -81,9 +74,8 @@ function findLegsLength(route){
        let d1 = distance + 0;
        distance += leg;
        overflow = distanceBetweenStops - (d1 % distanceBetweenStops);
-
        // Once the leg is >= to the desired distance between points, create the new marker and push it to markers
-       if (distance >= distanceBetweenStops && leg >= overflow) {
+       if (distance >= distanceBetweenStops && leg >= overflow && markers.length < rangeValue) {
          markerPosition = geo.computeOffset(
            point,
            overflow,
@@ -97,12 +89,7 @@ function findLegsLength(route){
      });
 
      /* latlngs of markers*/
-  const coffeeListLat = [];
-  const coffeeListLng = [];
-         markers.forEach(function (marker) {
-           
-
-           console.log("Looping 1 search for each marker lat/lng.");
+     const markerLocationPromises = markers.map(async function (marker) {          
            const url =
              "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
            const location = `location=${marker.position.lat()},${marker.position.lng()}`;
@@ -111,51 +98,26 @@ function findLegsLength(route){
            const key = "&key=AIzaSyCKz0oLVBeWPeIZBLO-JALpTrQCFTz_Fg8";
            const restaurantSearchUrl = url + location + radius + keyword + key;
 
-           fetch(restaurantSearchUrl)
-             .then((response) => response.json())
-             .then(
-               (data) => (
-                 
-                
-                 coffeeListLat.push(
-                   data.results[0].geometry.location.lat, 
-                   
-                 ),
+          return fetch(restaurantSearchUrl)
+             .then((response) => response.json()
+         );
+     })
 
-                 coffeeListLng.push(
-                  data.results[0].geometry.location.lng,
-                 )))
-
-
-              
-               
-                 
-                 /* setCoffeeLat(data.results[0].geometry.location.lat),
-                 setCoffeeLng(data.results[0].geometry.location.lng) */
-               
-             
+         const markerJsonList = await Promise.all(markerLocationPromises);
+        
+         return markerJsonList.map((data) => {
+           return { location: { placeId: data.results[0].place_id }, stopover: true }
          });
-         console.log("Number of Markers:", markers)
-         console.log("Marker 1 latlng:", markers[0].position.lat(), markers[0].position.lng());
-         console.log("Marker 2 latlng:", markers[1].position.lat(), markers[1].position.lng());
-         console.log("Coffee LngList:", coffeeListLng);
-        console.log("Coffee ListLat:", coffeeListLat)
-
-        setCoffeeLat(coffeeListLat)
-        setCoffeeLng(coffeeListLng)
-
-        console.log("NewCoffeeListLat:", coffeeLat)
+}
+        //         console.log("NewCoffeeListLat:", coffeeLat)
          
    /*   console.log("coffee lat: ", coffeeLat);
     console.log("coffee lng:", coffeeLng)
-     console.log(markers) */
      return markers.map(function (marker){
        return { lat: coffeeLat, lng: coffeeLng }
      });}
     
-     
 
-    
 
  /*Sets Markers Code End*/
  
@@ -168,34 +130,34 @@ function findLegsLength(route){
         
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
-        const results = await directionsService.route({
+        const initResults = await directionsService.route({
           origin: originRef.current.value,
           destination: destinationRef.current.value,
           // eslint-disable-next-line no-undef
-          travelMode: google.maps.TravelMode.DRIVING,
-         waypoints:[{ location:{lat: coffeeLat[0],lng: coffeeLng[0]}, 
-          stopover:true}]
+          travelMode: google.maps.TravelMode.DRIVING
         });
         /* console.log(results, "waypoints") */
 
-        
-
+      
+      
        
-    const markerPositions = getMarkerPositions(results.routes[0]);
-    
-    markerPositions.map( markerPositions => {
-    
-    })
-              
+    const waypoints = await getMarkerPositions(initResults.routes[0]);
+
+    const resultsWithWaypoints = await directionsService.route({
+      origin: originRef.current.value,
+      destination: destinationRef.current.value,
+      // eslint-disable-next-line no-undef
+      travelMode: google.maps.TravelMode.DRIVING,
+      waypoints
+    });
+
             
        /*  placeFinder(markerPositions) */      
-        setDirectionsResponse(results)
-        setDistance(results.routes[0].legs[0].distance.text)
-        setDuration(results.routes[0].legs[0].duration.text)
-      
-        
-
-  }
+        setDirectionsResponse(resultsWithWaypoints)
+        setDistance(resultsWithWaypoints.routes[0].legs[0].distance.text)
+        setDuration(resultsWithWaypoints.routes[0].legs[0].duration.text)
+}
+  
 
 return (
   <div>
@@ -229,5 +191,4 @@ return (
     </div>
   </div>
 );
-
         }
